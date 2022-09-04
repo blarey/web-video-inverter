@@ -27,36 +27,23 @@
     <link rel="stylesheet" href="../../../css/main.css">
 
     <style>
-        .none {
-            -webkit-filter: none;
-            filter: none;
-        }
 
-        .invert {
-            -webkit-filter: invert(1);
-            filter: invert(1);
-        }
-
-        button#snapshot {
-            margin: 0 10px 25px 0;
-            width: 110px;
-        }
-
-        video {
-            object-fit: cover;
-        }
     </style>
 
 </head>
 
 <body>
 <div id="container">
-    <video playsinline autoplay></video>
-    <label for="videoSource">Video source: </label><select id="videoSource"></select>
-	<a href="./list.html">list device info</a>
+	<h3>Listado de dispositivos accesibles por WebRTC:</h3>
+	<ul id="devices">
+		<li>cosa 1</li>
+		<li>cosa 2</li>
+		<li>cosa 3</li>
+		<li>cosa 4</li>
+	</ul>
 </div>
 
-<script src="js/main.js" async></script>
+<script src="js/diagnosis.js" async></script>
 
 </body>
 </html>
