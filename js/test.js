@@ -64,7 +64,7 @@ function start(){
     }
     getStream(constraints).then(getDevices).then(gotDevices)
     videoSelect.selectedIndex = [...videoSelect.options].
-      findIndex(option => option.text === stream.getVideoTracks()[0].label);
+      findIndex(option => option.text === window.stream.getVideoTracks()[0].label);
   }else{
     console.log("facingMode not suported")
     updateStream().then(getDevices).then(gotDevices)
