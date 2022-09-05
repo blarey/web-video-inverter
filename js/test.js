@@ -2,7 +2,7 @@
 
 const videoElement = document.querySelector('video');
 const videoSelect = document.querySelector('select#videoSource');
-videoSelect.onchange = getStream;
+videoSelect.onchange = updateStream;
 videoElement.className =  "invert";
 
 function getDevices() {
@@ -63,6 +63,8 @@ function start(){
       }
     }
     getStream(constraints).then(getDevices).then(gotDevices)
+    videoSelect.selectedIndex = [...videoSelect.options].
+      findIndex(option => option.text === stream.getVideoTracks()[0].label);
   }else{
     console.log("facingMode not suported")
     updateStream().then(getDevices).then(gotDevices)
