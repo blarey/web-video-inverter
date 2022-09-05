@@ -2,11 +2,20 @@
 
 const videoElement = document.querySelector('video');
 const videoSelect = document.querySelector('select#videoSource');
+const buttonTestChange = document.querySelector('button#testChangeStream');
 videoElement.className =  "invert";
+let videoStream;
 
 getStream().then(getDevices).then(gotDevices);
-videoSelect.onchange = changeStream();
 
+videoSelect.addEventListener('onchange', () => {
+    changeStream();
+  });
+buttonTestChange.addEventListener('click', () => {
+    changeStream();
+  });
+
+changeStream();
 
 function getDevices() {
   // AFAICT in Safari this only gets default devices until gUM is called :/
@@ -44,22 +53,20 @@ function getStream() {
 }
 
 async function changeStream() {
-  if (window.stream) {
-    const videoSource = videoSelect.value;
-    const constraints = {
-      audio: false,
-      video: {deviceId: videoSource ? {exact: videoSource} : undefined}
-    };
-    let videoTrack = window.stream.getVideoTracks()[0];
-    window.stream.getTracks().forEach(track => {
-      track.stop();
-    });
-    videoTrack.stop()
-    window.stream = await navigator.mediaDevices.getUserMedia(constraints);
-    videoElement.srcObject = null;
-    videoElement.srcObject = window.stream;
-    videoElement.play();
+  console.log("changeStream called");
+  if (videoStream) {
+    const tracks = stream.getTracks();
+    tracks.forEach(track => track.stop());
   }
+  const videoSource = videoSelect.value;
+  const constraints = {
+    audio: false,
+    video: {deviceId: videoSource ? {exact: videoSource} : undefined}
+  };
+  videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+  videoElement.srcObject = null;
+  videoElement.srcObject = videoStream;
+  videoElement.play();
 }
 
 function gotStream(stream) {
@@ -67,7 +74,7 @@ function gotStream(stream) {
   videoSelect.selectedIndex = [...videoSelect.options].
     findIndex(option => option.text === stream.getVideoTracks()[0].label);
   videoElement.srcObject = stream;
-  return stream;
+  videoStream = stream;
 }
 
 function handleError(error) {
