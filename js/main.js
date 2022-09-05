@@ -5,7 +5,7 @@ const videoSelect = document.querySelector('select#videoSource');
 videoSelect.onchange = getStream;
 videoElement.className =  "invert";
 
-getStream().then(getDevices).then(gotDevices);
+getStream().then(getDevices).then(gotDevices).then(getStream);
 
 function getDevices() {
   // AFAICT in Safari this only gets default devices until gUM is called :/
@@ -24,7 +24,6 @@ function gotDevices(deviceInfos) {
     }
   }
   videoSelect.selectedIndex = videoSelect.options.length-1;
-  getStream();
 }
 
 function getStream() {
