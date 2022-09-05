@@ -17,6 +17,7 @@ function gotDevices(deviceInfos) {
     option.value = deviceInfo.deviceId;
     if (deviceInfo.kind === 'videoinput') {
       option.text = deviceInfo.label || `Camera ${videoSelect.length + 1}`;
+      option.id = deviceInfo.label;
       videoSelect.appendChild(option);
     }
   }
@@ -64,7 +65,7 @@ function start(){
     }
     getStream(constraints).then(getDevices).then(gotDevices)
     videoSelect.selectedIndex = [...videoSelect.options].
-      findIndex(option => option.text === window.stream.getVideoTracks()[0].label);
+      findIndex(option => option.id === window.stream.getVideoTracks()[0].label);
   }else{
     console.log("facingMode not suported")
     updateStream().then(getDevices).then(gotDevices)
