@@ -23,6 +23,7 @@ function gotDevices(deviceInfos) {
       videoSelect.appendChild(option);
     }
   }
+  videoSelect.selectedIndex = videoSelect.options.length-1;
 }
 
 function getStream() {
