@@ -21,7 +21,7 @@ video.className =  "invert";
 // init stream options
 const constraints = {
   audio: false,
-  video: true
+  video: { facingMode: 'environment' }
 };
 
 function listVideoDevice(deviceInfos) {
