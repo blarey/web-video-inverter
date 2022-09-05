@@ -8,7 +8,7 @@ let videoStream;
 
 getStream().then(getDevices).then(gotDevices);
 
-videoSelect.addEventListener('onchange', () => {
+videoSelect.addEventListener('change', () => {
     changeStream();
   });
 buttonTestChange.addEventListener('click', () => {
