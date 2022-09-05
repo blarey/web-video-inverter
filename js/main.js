@@ -24,6 +24,7 @@ function gotDevices(deviceInfos) {
     }
   }
   videoSelect.selectedIndex = videoSelect.options.length-1;
+  getStream();
 }
 
 function getStream() {
