@@ -29,9 +29,21 @@
 		}
 
 		select#videoSource {
+			border-radius: 5px;
 			background-color: white;
+			opacity: 0.4;
 		}
-
+		
+		label {
+			text-shadow: 2px 2px #ffffff;
+			background-color: white;
+			opacity: 0.4;
+			border-radius: 2px;
+			margin: 0;
+			padding: 0;
+			padding-left: 5px;
+			padding-bottom: 2px;
+		}
 
         video {
 			object-fit: cover;
@@ -50,7 +62,7 @@
 <body>
     <video playsinline autoplay></video>
 	<div id="control">
-		<label for="videoSource">Video source: </label>
+		<label for="videoSource">Camera source: </label>
 		<select id="videoSource"></select>
 	</div>
 
