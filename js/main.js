@@ -63,12 +63,8 @@ function start(){
         facingMode: "environment"
       }
     }
-    getStream(constraints).then(getDevices).then(gotDevices)
-    index = [...videoSelect.options].
-      findIndex(option => option.id === window.stream.getVideoTracks()[0].label);
-    const $select = videoSelect;
-    $select.querySelectorAll('option')[index].selected = 'selected'
-
+    getStream(constraints).then(getDevices).then(gotDevices);
+	changeOptionByText(getCurrentStream);
   }else{
     console.log("facingMode not suported")
     updateStream().then(getDevices).then(gotDevices)
@@ -76,5 +72,16 @@ function start(){
     updateStream();
   }
 }
+
+function changeOptionByText(text){
+  videoSelect.selectedIndex = [...videoSelect.options].
+    findIndex(option => option.text === text);
+}
+
+function getCurrentStream(){
+  videoElement.srcObject
+	return videoElement.srcObject.getVideoTracks()[0].label;
+}
+
 
 start()
