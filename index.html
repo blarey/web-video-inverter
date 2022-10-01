@@ -2,21 +2,14 @@
 <head>
 
     <meta charset="utf-8">
-    <meta name="description" content="WebRTC code samples">
+    <meta name="description" content="Web Camera Video Inverter">
     <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
-    <meta itemprop="description" content="Client-side WebRTC code samples">
-    <meta itemprop="image" content="../../../images/webrtc-icon-192x192.png">
-    <meta itemprop="name" content="WebRTC code samples">
     <meta name="mobile-web-app-capable" content="yes">
     <meta id="theme-color" name="theme-color" content="#ffffff">
 
     <base target="_blank">
 
-    <title>getUserMedia + CSS filters</title>
-
-    <link rel="icon" sizes="192x192" href="../../../images/webrtc-icon-192x192.png">
-    <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="../../../css/main.css">
+    <title>Álvaro Caballero Jarnés</title>
 
     <style>
         .none {
@@ -29,20 +22,22 @@
             filter: invert(1);
         }
 
-        button#snapshot {
-            margin: 0 10px 25px 0;
-            width: 110px;
-        }
-
 		div#control {
 			margin: 0;
 			padding: 0;
 			z-index: 0;
 		}
 
+		select#videoSource {
+			background-color: white;
+		}
+
+
         video {
 			object-fit: cover;
 			position: absolute;
+			top: 0;
+  			left: 0;
   			width: 100%;
   			height: 100%;
   			position: absolute;
@@ -53,13 +48,11 @@
 </head>
 
 <body>
-<div id="container">
     <video playsinline autoplay></video>
-    	<div id="control">
-			<label for="videoSource">Video source: </label>
-			<select id="videoSource"></select>
-		</div>
-</div>
+	<div id="control">
+		<label for="videoSource">Video source: </label>
+		<select id="videoSource"></select>
+	</div>
 
 <script src="js/main.js" async></script>
 
