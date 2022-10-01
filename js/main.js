@@ -2,10 +2,8 @@
 
 const videoElement = document.querySelector('video');
 const videoSelect = document.querySelector('select#videoSource');
-videoSelect.onchange = getStream;
+videoSelect.onchange = updateStream;
 videoElement.className =  "invert";
-
-getStream().then(getDevices).then(gotDevices).then(getStream);
 
 function getDevices() {
   // AFAICT in Safari this only gets default devices until gUM is called :/
@@ -14,29 +12,32 @@ function getDevices() {
 
 function gotDevices(deviceInfos) {
   window.deviceInfos = deviceInfos; // make available to console
-  console.log('Available input and output devices:', deviceInfos);
   for (const deviceInfo of deviceInfos) {
     const option = document.createElement('option');
     option.value = deviceInfo.deviceId;
     if (deviceInfo.kind === 'videoinput') {
       option.text = deviceInfo.label || `Camera ${videoSelect.length + 1}`;
+      option.id = deviceInfo.label;
       videoSelect.appendChild(option);
     }
   }
-  videoSelect.selectedIndex = videoSelect.options.length-1;
 }
 
-function getStream() {
-  if (window.stream) {
-    window.stream.getTracks().forEach(track => {
-      track.stop();
-    });
-  }
+function updateStream(){
   const videoSource = videoSelect.value;
   const constraints = {
     audio: false,
     video: {deviceId: videoSource ? {exact: videoSource} : undefined}
   };
+  getStream(constraints);
+}
+
+function getStream(constraints) {
+  if (window.stream) {
+    window.stream.getTracks().forEach(track => {
+      track.stop();
+    });
+  }
   return navigator.mediaDevices.getUserMedia(constraints).
     then(gotStream).catch(handleError);
 }
@@ -51,3 +52,26 @@ function gotStream(stream) {
 function handleError(error) {
   console.error('Error: ', error);
 }
+
+function start(){
+  const supports = navigator.mediaDevices.getSupportedConstraints();
+  if(supports['facingMode']){
+    console.log("facingMode suported")
+    const constraints = {
+      audio: false,
+      video: {
+        facingMode: "environment"
+      }
+    }
+    getStream(constraints).then(getDevices).then(gotDevices)
+    videoSelect.selectedIndex = [...videoSelect.options].
+      findIndex(option => option.id === window.stream.getVideoTracks()[0].label);
+  }else{
+    console.log("facingMode not suported")
+    updateStream().then(getDevices).then(gotDevices)
+    videoSelect.selectedIndex = videoSelect.options.length-1;
+    updateStream();
+  }
+}
+
+start()
