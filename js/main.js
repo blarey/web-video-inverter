@@ -64,7 +64,7 @@ function start(){
       }
     }
     getStream(constraints).then(getDevices).then(gotDevices);
-	changeOptionByText(getCurrentStream);
+    changeOptionByText2(getCurrentStream);
   }else{
     console.log("facingMode not suported")
     updateStream().then(getDevices).then(gotDevices)
@@ -76,6 +76,10 @@ function start(){
 function changeOptionByText(text){
   videoSelect.selectedIndex = [...videoSelect.options].
     findIndex(option => option.text === text);
+}
+
+function changeOptionByText2(text){
+  [...videoSelect.options].find(option => option.text === text).selected = true;
 }
 
 function getCurrentStream(){
