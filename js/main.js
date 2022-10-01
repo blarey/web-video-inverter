@@ -23,7 +23,7 @@ function gotDevices(deviceInfos) {
       videoSelect.appendChild(option);
     }
   }
-  changeOptionByText(getCurrentDevice()):
+  changeOptionByText(getCurrentDevice());
 }
 
 
