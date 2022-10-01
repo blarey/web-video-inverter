@@ -64,9 +64,10 @@ function start(){
       }
     }
     getStream(constraints).then(getDevices).then(gotDevices)
-
+    index = [...videoSelect.options].
+      findIndex(option => option.id === window.stream.getVideoTracks()[0].label);
     const $select = videoSelect;
-    $select.value = $select.querySelector('option')[2].value;
+    $select.querySelectorAll('option')[index].selected = 'selected'
 
   }else{
     console.log("facingMode not suported")
