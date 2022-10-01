@@ -1,16 +1,18 @@
 'use strict';
 
-const videoElement = document.querySelector('video');
 const videoSelect = document.querySelector('select#videoSource');
-videoSelect.onchange = updateStream;
+videoSelect.onchange = updateAction;
+const videoElement = document.querySelector('video');
 videoElement.className =  "invert";
 
 function getDevices() {
   // AFAICT in Safari this only gets default devices until gUM is called :/
+  console.log("getDevices() called");
   return navigator.mediaDevices.enumerateDevices();
 }
 
 function gotDevices(deviceInfos) {
+  console.log("gotDevices() called");
   window.deviceInfos = deviceInfos; // make available to console
   for (const deviceInfo of deviceInfos) {
     const option = document.createElement('option');
@@ -23,30 +25,50 @@ function gotDevices(deviceInfos) {
   }
 }
 
-function updateStream(){
-  const videoSource = videoSelect.value;
-  const constraints = {
-    audio: false,
-    video: {deviceId: videoSource ? {exact: videoSource} : undefined}
-  };
-  getStream(constraints);
+
+function changeOptionByText(text){
+  console.log("changeOptionByText() called");
+  videoSelect.selectedIndex = [...videoSelect.options].
+    findIndex(option => option.text === text);
 }
 
+function getCurrentDevice(){
+  console.log("getCurrentStream() called");
+  const videoElement = document.querySelector('video');
+  console.log(videoElement.srcObject)
+  return videoElement.srcObject.getVideoTracks()[0].label;
+}
+
+
 function getStream(constraints) {
+  console.log("getStream() called");
   if (window.stream) {
     window.stream.getTracks().forEach(track => {
       track.stop();
     });
   }
-  return navigator.mediaDevices.getUserMedia(constraints).
-    then(gotStream).catch(handleError);
+  return navigator.mediaDevices.getUserMedia(constraints)
+}
+
+function updateStream(){
+  console.log("updateStream() called");
+  const videoSource = videoSelect.value;
+  const constraints = {
+    audio: false,
+    video: {deviceId: videoSource ? {exact: videoSource} : undefined}
+  };
+  return getStream(constraints);
 }
 
 function gotStream(stream) {
+  console.log("gotStream() called");
   window.stream = stream; // make stream available to console
-  videoSelect.selectedIndex = [...videoSelect.options].
-    findIndex(option => option.text === stream.getVideoTracks()[0].label);
   videoElement.srcObject = stream;
+}
+
+function updateAction() {
+  console.log("updateAction() called")
+  updateStream().then(gotStream).catch(handleError);
 }
 
 function handleError(error) {
@@ -63,28 +85,15 @@ function start(){
         facingMode: "environment"
       }
     }
-    getStream(constraints).then(getDevices).then(gotDevices);
-    changeOptionByText2(getCurrentStream);
+    getStream(constraints).then(gotStream).then(getDevices).then(gotDevices).catch(handleError);
   }else{
     console.log("facingMode not suported")
-    updateStream().then(getDevices).then(gotDevices)
-    videoSelect.selectedIndex = videoSelect.options.length-1;
-    updateStream();
+    updateStream().catch(handleError);
+	getDevices().then(gotDevices).catch(handleError);
+    videoSelect = document.querySelector('select#videoSource');
+	videoSelect.selectedIndex = videoSelect.options.length-1;
+    updateStream().then(gotStream).catch(handleError);;
   }
-}
-
-function changeOptionByText(text){
-  videoSelect.selectedIndex = [...videoSelect.options].
-    findIndex(option => option.text === text);
-}
-
-function changeOptionByText2(text){
-  [...videoSelect.options].find(option => option.text === text).selected = true;
-}
-
-function getCurrentStream(){
-  videoElement.srcObject
-	return videoElement.srcObject.getVideoTracks()[0].label;
 }
 
 
