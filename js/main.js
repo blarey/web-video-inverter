@@ -7,12 +7,10 @@ videoElement.className =  "invert";
 
 function getDevices() {
   // AFAICT in Safari this only gets default devices until gUM is called :/
-  console.log("getDevices() called");
   return navigator.mediaDevices.enumerateDevices();
 }
 
 function gotDevices(deviceInfos) {
-  console.log("gotDevices() called");
   window.deviceInfos = deviceInfos; // make available to console
   for (const deviceInfo of deviceInfos) {
     const option = document.createElement('option');
@@ -26,22 +24,17 @@ function gotDevices(deviceInfos) {
   changeOptionByText(getCurrentDevice());
 }
 
-
 function changeOptionByText(text){
-  console.log("changeOptionByText() called");
   videoSelect.selectedIndex = [...videoSelect.options].
     findIndex(option => option.text === text);
 }
 
 function getCurrentDevice(){
-  console.log("getCurrentStream() called");
-  console.log(videoElement.srcObject)
   return videoElement.srcObject.getVideoTracks()[0].label;
 }
 
 
 function getStream(constraints) {
-  console.log("getStream() called");
   if (window.stream) {
     window.stream.getTracks().forEach(track => {
       track.stop();
@@ -51,28 +44,25 @@ function getStream(constraints) {
 }
 
 function updateStream(){
-  console.log("updateStream() called");
   const videoSource = videoSelect.value;
   const constraints = {
     audio: false,
     video: {
         deviceId: videoSource ? {exact: videoSource} : undefined,
         width: { ideal: 4096 },
-        height: { ideal: 2160 }
+        height: { ideal: 2160 },
+        frameRate: { ideal: 120 }
     }
   };
   return getStream(constraints);
 }
 
 function gotStream(stream) {
-  console.log("gotStream() called");
   window.stream = stream; // make stream available to console
   videoElement.srcObject = stream;
-  console.log(videoElement.videoWidth, videoElement.videoHeight);
 }
 
 function updateAction() {
-  console.log("updateAction() called")
   updateStream().then(gotStream).catch(handleError);
 }
 
@@ -81,10 +71,10 @@ function handleError(error) {
 }
 
 function getVideoResolution() {
-        // log the real size
-        console.log('video resolution');
-        console.log(videoElement)
-        console.log(videoElement.videoWidth, videoElement.videoHeight);
+  // log the real size
+  console.log('video resolution');
+  console.log(videoElement)
+  console.log(videoElement.videoWidth, videoElement.videoHeight);
 }
 
 function start(){
@@ -96,7 +86,8 @@ function start(){
       video: {
         facingMode: "environment",
         width: { ideal: 4096 },
-        height: { ideal: 2160 }
+        height: { ideal: 2160 },
+        frameRate: { ideal: 120 }
       }
     }
     getStream(constraints).then(gotStream).then(getDevices).then(gotDevices).catch(handleError);
@@ -104,7 +95,6 @@ function start(){
     console.log("facingMode not suported")
     updateStream().catch(handleError);
 	getDevices().then(gotDevices).catch(handleError);
-    videoSelect = document.querySelector('select#videoSource');
 	videoSelect.selectedIndex = videoSelect.options.length-1;
     updateStream().then(gotStream).catch(handleError);;
   }
