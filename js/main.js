@@ -35,7 +35,6 @@ function changeOptionByText(text){
 
 function getCurrentDevice(){
   console.log("getCurrentStream() called");
-  const videoElement = document.querySelector('video');
   console.log(videoElement.srcObject)
   return videoElement.srcObject.getVideoTracks()[0].label;
 }
@@ -56,7 +55,11 @@ function updateStream(){
   const videoSource = videoSelect.value;
   const constraints = {
     audio: false,
-    video: {deviceId: videoSource ? {exact: videoSource} : undefined}
+    video: {
+        deviceId: videoSource ? {exact: videoSource} : undefined,
+        width: { ideal: 4096 },
+        height: { ideal: 2160 }
+    }
   };
   return getStream(constraints);
 }
@@ -65,6 +68,7 @@ function gotStream(stream) {
   console.log("gotStream() called");
   window.stream = stream; // make stream available to console
   videoElement.srcObject = stream;
+  console.log(videoElement.videoWidth, videoElement.videoHeight);
 }
 
 function updateAction() {
@@ -76,6 +80,13 @@ function handleError(error) {
   console.error('Error: ', error);
 }
 
+function getVideoResolution() {
+        // log the real size
+        console.log('video resolution');
+        console.log(videoElement)
+        console.log(videoElement.videoWidth, videoElement.videoHeight);
+}
+
 function start(){
   const supports = navigator.mediaDevices.getSupportedConstraints();
   if(supports['facingMode']){
@@ -83,7 +94,9 @@ function start(){
     const constraints = {
       audio: false,
       video: {
-        facingMode: "environment"
+        facingMode: "environment",
+        width: { ideal: 4096 },
+        height: { ideal: 2160 }
       }
     }
     getStream(constraints).then(gotStream).then(getDevices).then(gotDevices).catch(handleError);
